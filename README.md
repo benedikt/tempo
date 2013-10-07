@@ -1,4 +1,4 @@
-# Tempo [![Build Status](https://travis-ci.org/benedikt/tempo.png?branch=master)](http://travis-ci.org/benedikt/tempo) [![Dependency Status](https://gemnasium.com/benedikt/tempo.png)](http://gemnasium.com/benedikt/tempo)
+# Tempo [![Build Status](https://travis-ci.org/benedikt/tempo.png?branch=master)](http://travis-ci.org/benedikt/tempo) [![Dependency Status](https://gemnasium.com/benedikt/tempo.png)](http://gemnasium.com/benedikt/tempo) [![Code Climate](https://codeclimate.com/github/benedikt/tempo.png)](https://codeclimate.com/github/benedikt/tempo)
 
 Tempo is a simple templating system based on the Handlebars syntax. It provides a safe framework to render user provided templates without affecting the security of the server they are rendered on. It is designed to be easily extendable, without relying on global state.
 
