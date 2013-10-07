@@ -3,6 +3,10 @@ require 'rltk'
 module Tempo
   class Lexer < RLTK::Lexer
 
+    rule /\\\\/, :default do |output|
+      [:CONTENT, '\\']
+    end
+
     rule /\\(?={{)/, :default do |output|
       push_state :escaped
     end

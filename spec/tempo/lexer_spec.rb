@@ -50,6 +50,20 @@ describe Tempo::Lexer do
     end
   end
 
+  context 'input includes escaped slash before statement' do
+    describe '\\\\{{foo}}' do
+      it { expect(types).to eq([:CONTENT, :OPEN, :ID, :CLOSE, :EOS]) }
+      it { expect(output[0].value).to eq('\\') }
+      it { expect(output[2].value).to eq('foo') }
+    end
+
+    describe '\\\\ {{foo}}' do
+      it { expect(types).to eq([:CONTENT, :OPEN, :ID, :CLOSE, :EOS]) }
+      it { expect(output[0].value).to eq('\\\\ ') }
+      it { expect(output[2].value).to eq('foo') }
+    end
+  end
+
   context 'input includes a path notation' do
     describe '{{foo/bar}}' do
       it { expect(types).to eq([:OPEN, :ID, :SEP, :ID, :CLOSE, :EOS]) }
