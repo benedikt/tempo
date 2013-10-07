@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Tempo::VERSION
   spec.authors       = ['Benedikt Deicke']
   spec.email         = ['benedikt@benediktdeicke.com']
-  spec.description   = %q{Tempo is a simple templating system based on the handlebars syntax}
-  spec.summary       = %q{Tempo is a simple templating system based on the handlebars syntax}
+  spec.description   = %q{Tempo is a simple templating system based on the Handlebars syntax.}
+  spec.summary       = %q{Tempo is a simple templating system based on the Handlebars syntax. It provides a safe framework to render user provided templates without affecting the security of the server they are rendered on. It is designed to be easily extendable, without relying on global state.}
   spec.homepage      = 'https://github.com/benedikt/tempo'
   spec.license       = 'MIT'
 
