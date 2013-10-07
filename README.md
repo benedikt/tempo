@@ -22,15 +22,117 @@ Or install it yourself as:
 
 ## Usage
 
+**Tempo is still under heavy development, so the following is mostly pseudo-code, yet.**
+
+The simplest way to use Tempo is to use the `Tempo.render` method. Pass it a template and a context hash and it renders the template. 
+
+```ruby
+Tempo.render('This is a {{demo}}.', :demo => 'simple demo')
+# => This is a simple demo.
+```
+
+In order to add custom helpers you've to create a new instance of `Tempo::Runtime` and configure it according to your needs.
+
+```ruby
+tempo = Tempo::Runtime.new do |runtime|
+  runtime.partials.register(:header, '<header>{{title}}</header>')
+  runtime.helpers.register(:truncate) do |input, options|
+    length = options[:length]
+    input[0..length]
+  end
+end
+
+tempo.render('{{> header}} This is fun! {{truncate "This is a long sentence that needs to be truncated" 20}}...', :title => 'Title here')
+# => <header>Title here</header> This is fun! This is a long sente...
+```
+
+
 ### Contexts
 
+```ruby
+class Page
+  attr_accessor :title, :created_at, :user
+
+  def to_tempo
+    PageContext.new(self)
+  end
+end
+
+class PageContext < Tempo::Context
+  allows :title, :created_at
+end
+
+page = Page.new
+page.title = 'Example'
+page.created_at = Time.now
+page.user = 'Benedikt'
+
+Tempo.render('The page "{{title}}" was created at {{created_at}}', page)
+# => The page "Example" was created at 2013-10-07 17:13:40 +0000
+
+Tempo.render('The page "{{title}}" was created by "{{user}}"', page)
+# => The page "Example" was created by ""
+```
 
 
 ### Helpers
 
+```ruby
+tempo = Tempo::Runtime.new do |runtime|
+  runtime.helpers.register(:random_block) do
+    Math.rand <= 0.5 ? yield : ''
+  end
+end
+
+tempo.render('{{#random_block}}This is visible in 50% of the cases{{/random_block}}')
+# => This is visible in 50% of the cases
+```
+
+```ruby
+class FancyHelper < Tempo::Helper
+  def call(arg1, arg2, options)
+    if arg1 == arg2
+      contents
+    else
+      inverse
+    end
+  end
+end
+
+tempo = Tempo::Runtime.new do |runtime|
+  runtime.helpers.register(:fancy, FancyHelper.new)
+end
+
+rempo.render('{{#fancy 1 2}}The arguments are equal{{else}}The arguments are not equal{{/fancy}}')
+# => The arguments are not equal
+```
 
 
 ### Partials
+
+It's possible to customize the way Tempo looks up the partials. By default it uses the `Tempo::SimplePartialContext` which requires you to manually register each partial.
+Tempo provides a `Tempo::FilePartialContext` which looks up the templates in the given directory on the file system. 
+
+```ruby
+tempo = Tempo::Runtime.new do |runtime|
+  runtime.partials = Tempo::FilePartialContext.new('/path/to/templates')
+end
+```
+
+To further customize this, you can provide your own PartialContext. The following example looks up the partials in the database.
+
+```ruby
+class CustomPartialContext
+  def lookup(partial)
+    template = Template.find_by_name(partial)
+    template ? template.content : "Partial #{partial} could not be found!"
+  end
+end
+
+tempo = Tempo::Runtime.new do |runtime|
+  runtime.partials = CustomPartialContext.new
+end
+```
 
 
 ## Build Status
