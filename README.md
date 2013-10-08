@@ -147,6 +147,15 @@ See [the issue tracker on GitHub](https://github.com/benedikt/tempo/issues) for 
 
 The repository is [available on GitHub](https://github.com/benedikt/tempo). Feel free to fork it!
 
+## Contributors and special thanks
+
+See a [list of all contributors on GitHub](https://github.com/benedikt/tempo/contributors). Thanks a lot to everyone!
+
+Special thanks go to:
+
+* Kevin Garnett: For suggesting the name "Tempo"
+* Gregory T. Brown: For giving away the name on RubyGems
+
 ## Contributing
 
 1. Fork it
