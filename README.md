@@ -42,7 +42,7 @@ tempo = Tempo::Runtime.new do |runtime|
   end
 end
 
-tempo.render('{{> header}} This is fun! {{truncate "This is a long sentence that needs to be truncated" 20}}...', :title => 'Title here')
+tempo.render('{{> header}} This is fun! {{truncate "This is a long sentence that needs to be truncated" length=20}}...', :title => 'Title here')
 # => <header>Title here</header> This is fun! This is a long sente...
 ```
 
@@ -80,7 +80,7 @@ Tempo.render('The page "{{title}}" was created by "{{user}}"', page)
 ```ruby
 tempo = Tempo::Runtime.new do |runtime|
   runtime.helpers.register(:random_block) do
-    Math.rand <= 0.5 ? yield : ''
+    rand <= 0.5 ? yield : ''
   end
 end
 
@@ -141,7 +141,7 @@ tempo is on [Travis CI](https://travis-ci.org/benedikt/tempo) running the specs 
 
 ## Known issues
 
-See [the issue tracker on GitHub](https://github.com/benedikt/tempo) for a list of known issues.
+See [the issue tracker on GitHub](https://github.com/benedikt/tempo/issues) for a list of known issues.
 
 ## Repository
 
