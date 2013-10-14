@@ -15,7 +15,6 @@ module Tempo
     end
 
     class IdNode < Node
-
       def self.build(path_segments)
         if path_segments.first.kind_of?(CallNode) && path_segments.first.id == 'this'
           path_segments.shift

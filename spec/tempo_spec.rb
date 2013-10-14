@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Tempo do
 
   describe '.render' do
-    let(:template) { Tempo::Parser.parse(Tempo::Lexer.lex('{{foo}}')) }
+    let(:template) { '{{foo}}' }
     let(:context) { { 'foo' => 'bar' } }
     let(:runtime) { Tempo::Runtime.new }
 

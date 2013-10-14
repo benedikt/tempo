@@ -2,12 +2,11 @@ require 'spec_helper'
 
 describe Tempo::Runtime do
 
-  let(:input) { Tempo::Lexer.lex(self.class.description) }
-  let(:ast) { Tempo::Parser.parse(input) }
+  let(:input) { self.class.description }
   let(:context) { {} }
 
   subject { described_class.new }
-  let(:output) { subject.render(ast, context) }
+  let(:output) { subject.render(input, context) }
 
   context 'when input includes a simple expression' do
     describe '{{foo}}' do

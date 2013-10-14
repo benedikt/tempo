@@ -13,6 +13,11 @@ module Tempo
       send("visit_#{node.class.name.split('::').last}", node, context)
     end
 
+    def visit_String(node, context)
+      template = Parser.parse(Lexer.lex(node))
+      visit(template, context)
+    end
+
     def visit_TemplateNode(node, context)
       node.statements.each_with_object('') do |statement, output|
         output << visit(statement, context)
