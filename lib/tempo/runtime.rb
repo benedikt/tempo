@@ -7,10 +7,14 @@ module Tempo
       yield self if block_given?
     end
 
-    attr_writer :partials
+    attr_writer :partials, :helpers
 
     def partials
       @partials ||= Tempo::PartialContext.new
+    end
+
+    def helpers
+      @helpers ||= Tempo::HelperContext.new
     end
 
     def render(template, context)
@@ -39,7 +43,14 @@ module Tempo
     end
 
     def visit_UnescapedExpressionNode(node, context)
-      visit(node.path, context)
+      arguments = node.params.map { |p| visit(p, context) }
+      options = node.hash && visit(node.hash, context) || {}
+
+      if node.path.kind_of?(Nodes::CallNode) && helper = helpers.lookup(node.path.id)
+        helper.call(*arguments, options).to_s
+      else
+        visit(node.path, context)
+      end
     end
 
     def visit_ExpressionNode(node, context)
@@ -64,9 +75,15 @@ module Tempo
       arguments = node.params.map { |p| visit(p, context) }
       options = node.hash && visit(node.hash, context) || {}
 
-      conditional = visit(node.path, context)
+      conditional = if node.path.kind_of?(Nodes::CallNode) && helper = helpers.lookup(node.path.id)
+        helper
+      else
+        visit(node.path, context)
+      end
 
-      if conditional.respond_to?(:each)
+      if conditional.respond_to?(:call)
+        conditional.call(*arguments, options).to_s
+      elsif conditional.respond_to?(:each)
         conditional.enum_for(:each).inject('') do |output, child|
           output << visit(node.template, child)
         end

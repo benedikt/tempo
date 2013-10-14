@@ -127,4 +127,76 @@ describe Tempo::Runtime do
       end
     end
   end
+
+  context 'when input includes a simple helper statement' do
+    context 'when the helper is known' do
+      before do
+        subject.helpers.register('helper') do
+          'Helper'
+        end
+      end
+
+      describe '{{helper}}' do
+        it { expect(output).to eq('Helper') }
+      end
+    end
+
+    context 'when the helper is not known' do
+      describe '{{helper}}' do
+        it { expect(output).to eq('') }
+      end
+    end
+  end
+
+  context 'when input includes a path that has a segment named like a helper' do
+    let(:context) { { 'foo' => { 'helper' => 'bar' } } }
+
+    before do
+      subject.helpers.register('helper') do
+        'Helper'
+      end
+    end
+
+    describe '{{foo.helper}}' do
+      it { expect(output).to eq('bar') }
+    end
+  end
+
+  context 'when input includes a statement that is both a helper and in the context' do
+    let(:context) { { 'foo' => 'context' } }
+
+    before do
+      subject.helpers.register('foo') do
+        'helper'
+      end
+    end
+
+    describe '{{foo}}' do
+      it { expect(output).to eq('helper') }
+    end
+  end
+
+  context 'when input includes a helper with parameters' do
+    before do
+      subject.helpers.register('add') do |a, b|
+        a + b
+      end
+    end
+
+    describe '{{add 1 2}}' do
+      it { expect(output).to eq('3') }
+    end
+  end
+
+  context 'when input includes a helper with options' do
+    before do
+      subject.helpers.register('title') do |title, options|
+        title.empty? ? options['default'] : title
+      end
+    end
+
+    describe '{{title foo default="Default title"}}' do
+      it { expect(output).to eq('Default title') }
+    end
+  end
 end
