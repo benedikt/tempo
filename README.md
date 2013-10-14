@@ -110,7 +110,7 @@ rempo.render('{{#fancy 1 2}}The arguments are equal{{else}}The arguments are not
 
 ### Partials
 
-It's possible to customize the way Tempo looks up the partials. By default it uses the `Tempo::SimplePartialContext` which requires you to manually register each partial.
+It's possible to customize the way Tempo looks up the partials. By default it uses the `Tempo::PartialContext` which requires you to manually register each partial.
 Tempo provides a `Tempo::FilePartialContext` which looks up the templates in the given directory on the file system. 
 
 ```ruby
