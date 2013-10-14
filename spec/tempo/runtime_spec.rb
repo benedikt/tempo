@@ -8,6 +8,13 @@ describe Tempo::Runtime do
   subject { described_class.new }
   let(:output) { subject.render(input, context) }
 
+  describe '#initialize' do
+    it 'should pass the runtime instance to a given block' do
+      expect { |block| described_class.new(&block) }
+        .to yield_with_args(an_instance_of(described_class))
+    end
+  end
+
   context 'when input includes a simple expression' do
     describe '{{foo}}' do
       let(:context) { { 'foo' => 'Hello' } }

@@ -3,6 +3,10 @@ require 'cgi'
 module Tempo
   class Runtime
 
+    def initialize
+      yield self if block_given?
+    end
+
     attr_writer :partials
 
     def partials
