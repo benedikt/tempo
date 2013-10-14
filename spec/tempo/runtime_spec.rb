@@ -176,6 +176,20 @@ describe Tempo::Runtime do
     end
   end
 
+  context 'when input includes a scoped statement that is also a helper' do
+    let(:context) { { 'foo' => 'context' } }
+
+    before do
+      subject.helpers.register('foo') do
+        'helper'
+      end
+    end
+
+    describe '{{this.foo}}' do
+      it { pending { expect(output).to eq('context') } }
+    end
+  end
+
   context 'when input includes a helper with parameters' do
     before do
       subject.helpers.register('add') do |a, b|
