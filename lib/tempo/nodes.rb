@@ -66,10 +66,10 @@ module Tempo
 
     class PartialNode < Node
       value :name, String
-      child :context, IdNode
+      child :context_id, IdNode
 
       def to_s
-        "PARTIAL(#{name} #{context})"
+        "PARTIAL(#{name} #{context_id})"
       end
     end
 

@@ -96,4 +96,28 @@ describe Tempo::Runtime do
       it { expect(output).to eq('') }
     end
   end
+
+  context 'when input includes a partial' do
+    let(:context) { { 'foo' => 'bar', 'bar' => { 'foo' => 'baz' } } }
+
+    context 'when the partial is known' do
+      before do
+        subject.partials.register('partial', '{{foo}}')
+      end
+
+      describe '{{> partial}}' do
+        it { expect(output).to eq('bar')}
+      end
+
+      describe '{{> partial bar}}' do
+        it { expect(output).to eq('baz') }
+      end
+    end
+
+    context 'when the partial is not known' do
+      describe '{{> partial}}' do
+        it { expect(output).to eq('Missing partial \'partial\'') }
+      end
+    end
+  end
 end

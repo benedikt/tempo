@@ -3,6 +3,12 @@ require 'cgi'
 module Tempo
   class Runtime
 
+    attr_writer :partials
+
+    def partials
+      @partials ||= Tempo::PartialContext.new
+    end
+
     def render(template, context)
       visit(template, context)
     end
@@ -84,7 +90,14 @@ module Tempo
     end
 
     def visit_PartialNode(node, context)
-      "Todo: Partial lookup for #{node}"
+      partial = partials.lookup(node.name)
+      context = node.context_id ? visit(node.context_id, context) : context
+
+      if partial
+        visit(partial, context)
+      else
+        "Missing partial '#{node.name}'"
+      end
     end
 
     def visit_HashNode(node, context)
