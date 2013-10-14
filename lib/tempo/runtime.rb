@@ -128,7 +128,10 @@ module Tempo
     end
 
     def escape(output)
-      CGI.escapeHTML(output).gsub(/([`])/, { '`' => '&#x60;' })
+      CGI.escapeHTML(output).gsub(/(['`])/, {
+        "'" => '&#39;',
+        '`' => '&#x60;'
+      })
     end
 
   end
