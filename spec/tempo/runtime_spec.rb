@@ -89,4 +89,12 @@ describe Tempo::Runtime do
       it { expect(output).to eq('bar. baz. bam. bat. ') }
     end
   end
+
+  context 'when input includes unknown statements' do
+    let(:context) { { 'foo' => 'bar' } }
+
+    describe '{{bar}}' do
+      it { expect(output).to eq('') }
+    end
+  end
 end

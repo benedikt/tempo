@@ -32,7 +32,7 @@ module Tempo
     end
 
     def visit_CallNode(node, context)
-      context[node.id]
+      context.fetch(node.id, '')
     end
 
     def visit_PathNode(node, context)
