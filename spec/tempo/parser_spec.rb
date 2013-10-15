@@ -217,6 +217,16 @@ describe Tempo::Parser do
     end
   end
 
+  context 'input includes a block helper with a path parameter' do
+    describe '{{foo bar.baz.bam}}' do
+      it { expect(ast).to eq('EXPRESSION(ID(foo) [PATH(ID(bar) ID(baz) ID(bam))] )')}
+    end
+
+    describe '{{#foo bar.baz.bam}}{{/foo}}' do
+      it { expect(ast).to eq('BLOCK(ID(foo) [PATH(ID(bar) ID(baz) ID(bam))]  TEMPLATE() INVERSE())')}
+    end
+  end
+
   context 'input with invalid language' do
     describe 'foo{{^}}bar' do
       it { expect { ast }.to raise_error }

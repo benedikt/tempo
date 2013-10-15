@@ -83,7 +83,8 @@ module Tempo
     end
 
     production (:expression_contents) do
-      clause('path param* hash?') { |path, params, hash| [path, params, hash] }
+      clause('path param+ hash?') { |path, params, hash| [path, params, hash] }
+      clause('path hash?') { |path, hash| [path, [], hash] }
       clause('data_name') { |data| [data, [], nil] }
     end
 
