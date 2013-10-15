@@ -155,6 +155,7 @@ Special thanks go to:
 
 * Kevin Garnett: For suggesting the name "Tempo"
 * Gregory T. Brown: For giving away the name on RubyGems
+* Joe Walnes: For helping with debugging some parser issues
 
 ## Contributing
 
