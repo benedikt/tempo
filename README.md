@@ -137,7 +137,7 @@ end
 
 ## Build Status
 
-tempo is on [Travis CI](https://travis-ci.org/benedikt/tempo) running the specs on Ruby 1.9, Ruby 2.0, JRuby (1.9 mode), and Rubinius 2.0.
+tempo is on [Travis CI](https://travis-ci.org/benedikt/tempo) running the specs on Ruby 1.9, Ruby 2.0, and JRuby (1.9 mode). Unfortunately, Rubinius is currently not supported.
 
 ## Known issues
 
