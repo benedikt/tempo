@@ -217,4 +217,215 @@ describe Tempo::Runtime do
       it { expect(output).to eq('Default title') }
     end
   end
+
+  context 'when input includes an if helper' do
+    describe 'truthy values' do
+      context 'when the passed value is a non-empty string' do
+        describe '{{#if foo}}bar{{else}}baz{{/if}}' do
+          let(:context) { { 'foo' => 'true' } }
+          it { expect(output).to eq('bar') }
+        end
+      end
+
+      context 'when the passed value is a collection with elements' do
+        describe '{{#if foo}}bar{{else}}baz{{/if}}' do
+          let(:context) { { 'foo' => ['one'] } }
+          it { expect(output).to eq('bar') }
+        end
+      end
+
+      context 'when the passed value is true' do
+        describe '{{#if foo}}bar{{else}}baz{{/if}}' do
+          let(:context) { { 'foo' => true } }
+          it { expect(output).to eq('bar') }
+        end
+      end
+
+      context 'when the passed value is a number' do
+        describe '{{#if foo}}bar{{else}}baz{{/if}}' do
+          let(:context) { { 'foo' => 1 } }
+          it { expect(output).to eq('bar') }
+        end
+      end
+
+      context 'when the passed value is an object' do
+        describe '{{#if foo}}bar{{else}}baz{{/if}}' do
+          let(:context) { { 'foo' => Object.new } }
+          it { expect(output).to eq('bar') }
+        end
+      end
+    end
+
+    describe 'falsy values' do
+      context 'when the passed value is an empty string' do
+        describe '{{#if foo}}bar{{else}}baz{{/if}}' do
+          let(:context) { { 'foo' => '' } }
+          it { expect(output).to eq('baz') }
+        end
+      end
+
+      context 'when the passed value is a collection with elements' do
+        describe '{{#if foo}}bar{{else}}baz{{/if}}' do
+          let(:context) { { 'foo' => [] } }
+          it { expect(output).to eq('baz') }
+        end
+      end
+
+      context 'when the passed value is false' do
+        describe '{{#if foo}}bar{{else}}baz{{/if}}' do
+          let(:context) { { 'foo' => false } }
+          it { expect(output).to eq('baz') }
+        end
+      end
+
+      context 'when the passed value is a nil' do
+        describe '{{#if foo}}bar{{else}}baz{{/if}}' do
+          let(:context) { { 'foo' => nil } }
+          it { expect(output).to eq('baz') }
+        end
+      end
+    end
+  end
+
+  context 'when input includes an unless helper' do
+    describe 'truthy values' do
+      context 'when the passed value is a non-empty string' do
+        describe '{{#unless foo}}bar{{else}}baz{{/unless}}' do
+          let(:context) { { 'foo' => 'true' } }
+          it { expect(output).to eq('baz') }
+        end
+      end
+
+      context 'when the passed value is a collection with elements' do
+        describe '{{#unless foo}}bar{{else}}baz{{/unless}}' do
+          let(:context) { { 'foo' => ['one'] } }
+          it { expect(output).to eq('baz') }
+        end
+      end
+
+      context 'when the passed value is true' do
+        describe '{{#unless foo}}bar{{else}}baz{{/unless}}' do
+          let(:context) { { 'foo' => true } }
+          it { expect(output).to eq('baz') }
+        end
+      end
+
+      context 'when the passed value is a number' do
+        describe '{{#unless foo}}bar{{else}}baz{{/unless}}' do
+          let(:context) { { 'foo' => 1 } }
+          it { expect(output).to eq('baz') }
+        end
+      end
+
+      context 'when the passed value is an object' do
+        describe '{{#unless foo}}bar{{else}}baz{{/unless}}' do
+          let(:context) { { 'foo' => Object.new } }
+          it { expect(output).to eq('baz') }
+        end
+      end
+    end
+
+    describe 'falsy values' do
+      context 'when the passed value is an empty string' do
+        describe '{{#unless foo}}bar{{else}}baz{{/unless}}' do
+          let(:context) { { 'foo' => '' } }
+          it { expect(output).to eq('bar') }
+        end
+      end
+
+      context 'when the passed value is a collection with elements' do
+        describe '{{#unless foo}}bar{{else}}baz{{/unless}}' do
+          let(:context) { { 'foo' => [] } }
+          it { expect(output).to eq('bar') }
+        end
+      end
+
+      context 'when the passed value is false' do
+        describe '{{#unless foo}}bar{{else}}baz{{/unless}}' do
+          let(:context) { { 'foo' => false } }
+          it { expect(output).to eq('bar') }
+        end
+      end
+
+      context 'when the passed value is a nil' do
+        describe '{{#unless foo}}bar{{else}}baz{{/unless}}' do
+          let(:context) { { 'foo' => nil } }
+          it { expect(output).to eq('bar') }
+        end
+      end
+    end
+  end
+
+  context 'when input includes an each helper' do
+    context 'when the passed value is nil' do
+      describe '{{#each foo}}bar{{else}}baz{{/each}}' do
+        let(:context) { { 'foo' => nil } }
+        it { expect(output).to eq('baz') }
+      end
+    end
+
+    context 'when the passed value is an empty collection' do
+      describe '{{#each foo}}bar{{else}}baz{{/each}}' do
+        let(:context) { { 'foo' => [] } }
+        it { expect(output).to eq('baz') }
+      end
+    end
+
+    context 'when the passed value is not a collection' do
+      describe '{{#each foo}}bar{{else}}baz{{/each}}' do
+        let(:context) { { 'foo' => 'bar' } }
+        it { expect(output).to eq('baz') }
+      end
+    end
+
+    context 'when the passed value is a collection with elements' do
+      describe '{{#each foo}}{{this}}. {{else}}baz{{/each}}' do
+        let(:context) { { 'foo' => ['foo', 'bar', 'baz'] } }
+        it { expect(output).to eq('foo. bar. baz. ') }
+      end
+    end
+
+    context 'when input uses the @index local' do
+      context 'when the passed value is a collection with elements' do
+        describe '{{#each foo}}{{@index}} {{this}}. {{else}}baz{{/each}}' do
+          let(:context) { { 'foo' => ['foo', 'bar', 'baz'] } }
+          it { expect(output).to eq('0 foo. 1 bar. 2 baz. ') }
+        end
+      end
+    end
+
+    context 'when input uses the @key local' do
+      context 'when the passed value is a collection with elements' do
+        describe '{{#each this}}{{@key}}: {{this}}. {{else}}baz{{/each}}' do
+          let(:context) { { 'foo' => 'bar', 'baz' => 'bam' } }
+          it { expect(output).to eq('foo: bar. baz: bam. ') }
+        end
+      end
+    end
+
+    context 'when input uses nested each helpers with locals' do
+      describe '{{#each this}}{{@key}} ({{@index}}): ({{#each this}}{{@index}} {{this}} {{/each}}), {{/each}}' do
+        let(:context) { { 'foo' => ['bar', 'baz', 'bam'], 'baz' => ['bam', 'bar', 'foo'] } }
+        it { expect(output).to eq('foo (0): (0 bar 1 baz 2 bam ), baz (1): (0 bam 1 bar 2 foo ), ') }
+      end
+    end
+  end
+
+  context 'when input includes a with helper' do
+    describe '{{#with foo}}{{bar}}{{/with}}' do
+      let(:context) { { 'foo' => { 'bar' => 'baz' } } }
+      it { expect(output).to eq('baz') }
+    end
+  end
+
+  context 'when input includes a log helper' do
+    describe '{{log "This is a message!"}}' do
+      it 'should print the given message to STDOUT' do
+        io = double
+        io.should_receive(:puts).with('This is a message!')
+        subject.helpers.register(:log, Tempo::StandardHelperContext::Log.new(io))
+        expect(output).to eq('')
+      end
+    end
+  end
 end

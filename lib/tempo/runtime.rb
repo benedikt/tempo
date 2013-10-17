@@ -14,7 +14,7 @@ module Tempo
     end
 
     def helpers
-      @helpers ||= Tempo::HelperContext.new
+      @helpers ||= Tempo::StandardHelperContext.new
     end
 
     def render(template, context)
@@ -82,7 +82,17 @@ module Tempo
       end
 
       if conditional.respond_to?(:call)
-        conditional.call(*arguments, options).to_s
+        conditional.call(*arguments, options) do |variant, local_context, local_variables|
+          variant, local_context, local_variables, = :template, variant, local_context unless variant.kind_of?(Symbol)
+
+          local_variables_stack.push(local_variables)
+
+          result = visit(node.send(variant), local_context || context)
+
+          local_variables_stack.pop
+
+          result
+        end.to_s
       elsif conditional.respond_to?(:each)
         conditional.enum_for(:each).inject('') do |output, child|
           output << visit(node.template, child)
@@ -127,11 +137,20 @@ module Tempo
       end
     end
 
+    def visit_DataNode(node, context)
+      return '' unless local_variables = local_variables_stack.last
+      local_variables[node.id.to_s].to_s
+    end
+
     def escape(output)
       CGI.escapeHTML(output).gsub(/(['`])/, {
         "'" => '&#39;',
         '`' => '&#x60;'
       })
+    end
+
+    def local_variables_stack
+      @local_variables ||= []
     end
 
   end
