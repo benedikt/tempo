@@ -42,6 +42,10 @@ describe Tempo::Runtime do
     describe '{{! Foo}}Foo' do
       it { expect(output).to eq('Foo') }
     end
+
+    describe '{{!-- Foo --}}Foo'do
+      it { expect(output).to eq('Foo') }
+    end
   end
 
   context 'when context includes entities' do
