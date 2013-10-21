@@ -174,6 +174,18 @@ describe Tempo::Runtime do
     end
   end
 
+  context 'when input includes a path that starts with a helper' do
+    before do
+      subject.helpers.register('foo') do
+        { 'bar' => 'baz' }
+      end
+    end
+
+    describe '{{foo.bar}}' do
+      it { expect(output).to eq('baz') }
+    end
+  end
+
   context 'when input includes a path that has a segment named like a helper' do
     let(:context) { { 'foo' => { 'helper' => 'bar' } } }
 

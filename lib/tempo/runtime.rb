@@ -65,8 +65,12 @@ module Tempo
     end
 
     def visit_PathNode(node, context)
-      node.ids.inject(context) do |ctx, segment|
-        visit(segment, ctx)
+      node.ids.each_with_index.inject(context) do |ctx, (segment, index)|
+        if index == 0 && helper = helpers.lookup(segment.id)
+          helper.call
+        else
+          visit(segment, ctx)
+        end
       end
     end
 
