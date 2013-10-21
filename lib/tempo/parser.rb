@@ -1,5 +1,5 @@
 require 'rltk'
-require 'rltk/ast'
+require 'tempo/nodes'
 
 module Tempo
   class Parser < RLTK::Parser

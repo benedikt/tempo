@@ -1,4 +1,3 @@
-require 'rltk'
 require 'rltk/ast'
 
 module Tempo

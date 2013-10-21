@@ -1,4 +1,6 @@
 require 'cgi'
+require 'tempo/partial_context'
+require 'tempo/standard_helper_context'
 
 module Tempo
   class Runtime

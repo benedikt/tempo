@@ -1,4 +1,5 @@
 require 'tempo/helper_utilities'
+require 'tempo/helper_context'
 
 module Tempo
   class StandardHelperContext < HelperContext

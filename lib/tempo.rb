@@ -1,11 +1,7 @@
 require 'tempo/version'
 
 require 'tempo/lexer'
-require 'tempo/nodes'
 require 'tempo/parser'
-require 'tempo/partial_context'
-require 'tempo/helper_context'
-require 'tempo/standard_helper_context'
 require 'tempo/runtime'
 
 module Tempo
