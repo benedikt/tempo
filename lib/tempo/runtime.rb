@@ -49,10 +49,10 @@ module Tempo
       options = node.hash && visit(node.hash, context) || {}
 
       if node.path.kind_of?(Nodes::CallNode) && helper = helpers.lookup(node.path.id)
-        helper.call(*arguments, options).to_s
+        helper.call(*arguments, options)
       else
         visit(node.path, context)
-      end
+      end.to_s
     end
 
     def visit_ExpressionNode(node, context)
