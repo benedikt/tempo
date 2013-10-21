@@ -3,6 +3,8 @@ require 'tempo/version'
 require 'tempo/lexer'
 require 'tempo/parser'
 require 'tempo/runtime'
+require 'tempo/context'
+require 'tempo/core_ext'
 
 module Tempo
   class << self

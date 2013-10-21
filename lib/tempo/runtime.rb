@@ -60,7 +60,8 @@ module Tempo
     end
 
     def visit_CallNode(node, context)
-      context.fetch(node.id, '')
+      context = context.to_tempo_context
+      context && context.invoke(node.id)
     end
 
     def visit_PathNode(node, context)

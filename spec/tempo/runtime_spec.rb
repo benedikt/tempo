@@ -108,6 +108,28 @@ describe Tempo::Runtime do
     end
   end
 
+  context 'when input wants to print a non-string' do
+    describe '{{foo}}' do
+      let(:context) { { 'foo' => 1 }}
+      it { expect(output).to eq('1') }
+    end
+
+    describe '{{foo}}' do
+      let(:context) { { 'foo' => { 'bar' => 'baz' } }}
+      it { expect(output).to eq('') }
+    end
+
+    describe '{{foo}}' do
+      let(:context) { { 'foo' => true }}
+      it { expect(output).to eq('true') }
+    end
+
+    describe '{{foo}}' do
+      let(:context) { { 'foo' => false }}
+      it { expect(output).to eq('false') }
+    end
+  end
+
   context 'when input includes a partial' do
     let(:context) { { 'foo' => 'bar', 'bar' => { 'foo' => 'baz' } } }
 
@@ -425,6 +447,34 @@ describe Tempo::Runtime do
         io.should_receive(:puts).with('This is a message!')
         subject.helpers.register(:log, Tempo::StandardHelperContext::Log.new(io))
         expect(output).to eq('')
+      end
+    end
+  end
+
+  context 'when input accesses an allowed method' do
+    let(:resource) { double(:resource, :foo => 'bar') }
+    let(:context_class) do
+      Class.new(Tempo::Context).tap do |c|
+        c.allows :foo
+      end
+    end
+
+    describe '{{foo}}' do
+      let(:context) { context_class.new(resource) }
+      it { expect(output).to eq('bar') }
+    end
+  end
+
+  context 'when input accesses a protected method' do
+    describe '{{foo}}' do
+      let(:resource) { double(:resource, :foo => 'bar') }
+      let(:context) { Tempo::Context.new(resource) }
+
+      it { expect(output).to eq('') }
+
+      it 'should never call the protected method' do
+        expect(resource).to_not receive(:foo)
+        output
       end
     end
   end
