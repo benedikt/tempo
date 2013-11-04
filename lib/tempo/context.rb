@@ -45,7 +45,9 @@ module Tempo
 
   class HashContext < Context
     def invoke(key)
-      __getobj__.fetch(key, '').to_tempo_context
+      result = __getobj__.fetch(key, '')
+      result = result.call if result.respond_to?(:call)
+      result.to_tempo_context
     end
 
     def has_invokable_method?(method)
