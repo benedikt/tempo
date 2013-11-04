@@ -151,7 +151,7 @@ describe 'basics' do
     end
 
     describe '{{awesome}}' do
-      it { should eq('&amp;&quot;&#x27;&#x60;\\&lt;&gt;') }
+      it { should eq('&amp;&quot;&#39;&#x60;\\&lt;&gt;') }
     end
 
     describe '{{awesome}}' do
