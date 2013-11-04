@@ -101,8 +101,11 @@ module Tempo
           result
         end.to_s
       elsif conditional.respond_to?(:each)
-        conditional.enum_for(:each).inject('') do |output, child|
+        conditional.enum_for(:each).each_with_index.inject('') do |output, (child, index)|
+          local_variables_stack.push({ 'index' => index })
           output << visit(node.template, child)
+          local_variables_stack.pop
+          output
         end
       elsif conditional
         visit(node.template, context)
