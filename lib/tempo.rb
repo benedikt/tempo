@@ -5,6 +5,7 @@ require 'tempo/parser'
 require 'tempo/runtime'
 require 'tempo/context'
 require 'tempo/core_ext'
+require 'tempo/safe_string'
 
 module Tempo
   class << self

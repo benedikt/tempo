@@ -150,6 +150,8 @@ module Tempo
     end
 
     def escape(output)
+      return output if output.kind_of?(Tempo::SafeString)
+
       CGI.escapeHTML(output).gsub(/(['`])/, {
         "'" => '&#39;',
         '`' => '&#x60;'
