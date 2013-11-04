@@ -93,21 +93,18 @@ module Tempo
           variant, local_context, local_variables, = :template, variant, local_context unless variant.kind_of?(Symbol)
 
           local_variables_stack.push(local_variables)
-
           result = visit(node.send(variant), local_context || context)
-
           local_variables_stack.pop
-
           result
         end.to_s
-      elsif conditional.respond_to?(:each)
+      elsif conditional.respond_to?(:each) && conditional.enum_for(:each).count > 0
         conditional.enum_for(:each).each_with_index.inject('') do |output, (child, index)|
           local_variables_stack.push({ 'index' => index })
           output << visit(node.template, child)
           local_variables_stack.pop
           output
         end
-      elsif conditional
+      elsif conditional && !(conditional.respond_to?(:empty?) && conditional.empty?)
         visit(node.template, context)
       else
         visit(node.inverse, context)
