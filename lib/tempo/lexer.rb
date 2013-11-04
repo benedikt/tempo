@@ -3,16 +3,31 @@ require 'rltk'
 module Tempo
   class Lexer < RLTK::Lexer
 
-    rule /\\\\/, :default do |output|
-      [:CONTENT, '\\']
+    rule /.*?(?={{)/, :default do |output|
+      if output[-2..-1] == '\\\\'
+        output = output[0..-2]
+        push_state :expression
+      elsif output[-1] == '\\'
+        output = output[0..-2]
+        push_state :escaped
+      else
+        push_state :expression
+      end
+
+      [:CONTENT, output] unless output.empty?
     end
 
     rule /\\(?={{)/, :default do |output|
       push_state :escaped
     end
 
-    rule /{{.*?(?=\\{{|{{|\z)/m, :escaped do |output|
-      pop_state
+    rule /{{.*?(?={{|\z)/m, :escaped do |output|
+      if output[-1] == '\\'
+        output = output[0..-2]
+      else
+        pop_state
+      end
+
       [:CONTENT, output]
     end
 
@@ -20,61 +35,54 @@ module Tempo
       [:CONTENT, output]
     end
 
-    rule /{{>/, :default do
-      push_state :expression
+    rule /{{>/, :expression do
       :OPEN_PARTIAL
     end
 
-    rule /{{#/, :default do
-      push_state :expression
+    rule /{{#/, :expression do
       :OPEN_BLOCK
     end
 
-    rule /{{\//, :default do
-      push_state :expression
+    rule /{{\//, :expression do
       :OPEN_ENDBLOCK
     end
 
-    rule /{{^/, :default do
-      push_state :expression
+    rule /{{^/, :expression do
       :OPEN_INVERSE
     end
 
-    rule /{{\s*else/, :default do
-      push_state :expression
+    rule /{{\s*else/, :expression do
       :OPEN_INVERSE
     end
 
-    rule /{{\^/, :default do
-      push_state :expression
+    rule /{{\^/, :expression do
       :OPEN_INVERSE
     end
 
-    rule /{{{/, :default do
-      push_state :expression
+    rule /{{{/, :expression do
       :OPEN_UNESCAPED
     end
 
-    rule /{{&/, :default do
-      push_state :expression
+    rule /{{&/, :expression do
       :OPEN_UNESCAPED_AMP
     end
 
-    rule /{{!--/, :default do
+    rule /{{!--/, :expression do
       push_state :comment
     end
 
     rule /[\s\S]*?--}}/, :comment do |comment|
       pop_state
+      pop_state
       [:COMMENT, comment[0..-5]]
     end
 
-    rule /{{![^-]{2}([\s\S]*?)}}/, :default do |comment|
+    rule /{{![^-]{2}([\s\S]*?)}}/, :expression do |comment|
+      pop_state
       [:COMMENT, comment[3..-3]]
     end
 
-    rule /{{/, :default do
-      push_state :expression
+    rule /{{/, :expression do
       :OPEN
     end
 

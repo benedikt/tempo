@@ -64,6 +64,43 @@ describe Tempo::Lexer do
     end
   end
 
+  context 'input includes escaped escape characters' do
+    describe '{{foo}} \\\\{{bar}} {{baz}}' do
+      it { expect(types).to eq([:OPEN, :ID, :CLOSE, :CONTENT, :OPEN, :ID, :CLOSE, :CONTENT, :OPEN, :ID, :CLOSE, :EOS]) }
+      it { expect(output[3].value).to eq(' \\') }
+      it { expect(output[5].value).to eq('bar') }
+    end
+  end
+
+  context 'input includes multiple escaped escaped characters' do
+    describe '{{foo}} \\\\{{bar}} \\\\{{baz}}' do
+      it { expect(types).to eq([:OPEN, :ID, :CLOSE, :CONTENT, :OPEN, :ID, :CLOSE, :CONTENT, :OPEN, :ID, :CLOSE, :EOS]) }
+      it { expect(output[3].value).to eq(' \\') }
+      it { expect(output[5].value).to eq('bar') }
+      it { expect(output[7].value).to eq(' \\') }
+      it { expect(output[9].value).to eq('baz') }
+    end
+  end
+
+  context 'input includes mixed escaped delimiters and escaped escape characters' do
+    describe '{{foo}} \\\\{{bar}} \\{{baz}}' do
+      it { expect(types).to eq([:OPEN, :ID, :CLOSE, :CONTENT, :OPEN, :ID, :CLOSE, :CONTENT, :CONTENT, :EOS]) }
+      it { expect(output[1].value).to eq('foo') }
+      it { expect(output[3].value).to eq(' \\') }
+      it { expect(output[5].value).to eq('bar') }
+      it { expect(output[7].value).to eq(' ') }
+      it { expect(output[8].value).to eq('{{baz}}') }
+    end
+  end
+
+  context 'input includes escaped escape character on a triple stash' do
+    describe '{{foo}} \\\\{{{bar}}} {{baz}}' do
+      it { expect(types).to eq([:OPEN, :ID, :CLOSE, :CONTENT, :OPEN_UNESCAPED, :ID, :CLOSE_UNESCAPED, :CONTENT, :OPEN, :ID, :CLOSE, :EOS]) }
+      it { expect(output[3].value).to eq(' \\') }
+      it { expect(output[5].value).to eq('bar') }
+    end
+  end
+
   context 'input includes a path notation' do
     describe '{{foo/bar}}' do
       it { expect(types).to eq([:OPEN, :ID, :SEP, :ID, :CLOSE, :EOS]) }
@@ -167,6 +204,8 @@ describe Tempo::Lexer do
     describe 'foo {{!-- this is a {{comment}} --}} bar {{baz}}' do
       it { expect(types).to eq([:CONTENT, :COMMENT, :CONTENT, :OPEN, :ID, :CLOSE, :EOS]) }
       it { expect(output[1].value).to eq(' this is a {{comment}} ') }
+      it { expect(output[2].value).to eq(' bar ') }
+      it { expect(output[4].value).to eq('baz') }
     end
   end
 
