@@ -84,13 +84,24 @@ describe 'blocks' do
     end
 
     describe '{{#goodbyes}}{{text}} cruel {{../name}}! {{/goodbyes}}' do
-      it { pending { should eq('goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ') } }
+      it { should eq('goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ') }
     end
   end
 
   context 'handling blocks with complex lookup using nested context' do
     describe '{{#goodbyes}}{{text}} cruel {{foo/../name}}! {{/goodbyes}}' do
-      pending 'raises an exception' do
+      let(:context) do
+        {
+          'goodbyes' => [
+            { 'text' => 'goodbye' },
+            { 'text' => 'Goodbye' },
+            { 'text' => 'GOODBYE' }
+          ],
+          'world' => 'world'
+        }
+      end
+
+      it 'raises an exception' do
         expect { subject }.to raise_error
       end
     end
@@ -107,7 +118,7 @@ describe 'blocks' do
     end
 
     describe '{{#outer}}Goodbye {{#inner}}cruel {{../../omg}}{{/inner}}{{/outer}}' do
-      it { pending { should eq('Goodbye cruel OMG!') } }
+      it { should eq('Goodbye cruel OMG!') }
     end
   end
 

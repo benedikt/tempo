@@ -93,7 +93,7 @@ describe 'basics' do
       let(:context) { 0 }
 
       describe 'num: {{.}}' do
-        it { pending { should eq('num: 0') } }
+        it { should eq('num: 0') }
       end
     end
 
@@ -365,7 +365,7 @@ describe 'basics' do
         }
       end
 
-      it { pending { should eq('helloHelloHELLO') } }
+      it { should eq('helloHelloHELLO') }
     end
   end
 

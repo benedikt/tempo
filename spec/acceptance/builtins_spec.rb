@@ -104,7 +104,7 @@ describe 'builtin helpers' do
     context 'when using nested  @index' do
       describe '{{#each goodbyes}}{{@index}}. {{text}}! {{#each ../goodbyes}}{{@index}} {{/each}}After {{@index}} {{/each}}{{@index}}cruel {{world}}!' do
         let(:context) { { 'goodbyes' => [{ 'text' => 'goodbye' }, { 'text' => 'Goodbye' }, { 'text' => 'GOODBYE' }], 'world' => 'world' } }
-        it { pending { should eq('0. goodbye! 0 1 2 After 0 1. Goodbye! 0 1 2 After 1 2. GOODBYE! 0 1 2 After 2 cruel world!') } }
+        it { should eq('0. goodbye! 0 1 2 After 0 1. Goodbye! 0 1 2 After 1 2. GOODBYE! 0 1 2 After 2 cruel world!') }
       end
     end
 
