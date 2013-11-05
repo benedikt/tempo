@@ -1,5 +1,5 @@
 module Tempo
-  class HelperContext
+  class HelperResolver
 
     def register(name, helper = nil, &block)
       helpers[name.to_s] = helper || block

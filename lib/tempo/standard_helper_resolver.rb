@@ -1,8 +1,8 @@
 require 'tempo/helper_utilities'
-require 'tempo/helper_context'
+require 'tempo/helper_resolver'
 
 module Tempo
-  class StandardHelperContext < HelperContext
+  class StandardHelperResolver < HelperResolver
     class Each
       extend Tempo::HelperUtilities
 

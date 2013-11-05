@@ -1,6 +1,6 @@
 require 'cgi'
 require 'tempo/partial_resolver'
-require 'tempo/standard_helper_context'
+require 'tempo/standard_helper_resolver'
 
 module Tempo
   class Runtime
@@ -16,7 +16,7 @@ module Tempo
     end
 
     def helpers
-      @helpers ||= Tempo::StandardHelperContext.new
+      @helpers ||= Tempo::StandardHelperResolver.new
     end
 
     def render(template, context)

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Tempo::HelperContext do
+describe Tempo::HelperResolver do
 
   let(:helper) { lambda { 'Helper' } }
 

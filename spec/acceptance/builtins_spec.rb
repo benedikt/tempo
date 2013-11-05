@@ -148,7 +148,7 @@ describe 'builtin helpers' do
       it 'should print the given message to STDOUT' do
         io = double
         io.should_receive(:puts).with('This is a message!')
-        runtime.helpers.register(:log, Tempo::StandardHelperContext::Log.new(io))
+        runtime.helpers.register(:log, Tempo::StandardHelperResolver::Log.new(io))
         expect(subject).to eq('')
       end
     end
