@@ -354,7 +354,7 @@ describe 'basics' do
       it { should eq('goodbyeGoodbyeGOODBYE') }
     end
 
-    describe '{{#goodbyes}}{{this/text}}{{/goodbyes}}' do
+    describe '{{#hellos}}{{this/text}}{{/hellos}}' do
       let(:context) do
         {
           'hellos' => [
@@ -371,7 +371,17 @@ describe 'basics' do
 
   context 'handling the this keyword inside nested paths' do
     describe '{{#hellos}}{{text/this/foo}}{{/hellos}}' do
-      pending 'raises an exception' do
+      let(:context) do
+        {
+          'hellos' => [
+            { 'text' => 'hello' },
+            { 'text' => 'Hello' },
+            { 'text' => 'HELLO' }
+          ]
+        }
+      end
+
+      it 'raises an exception' do
         expect { subject }.to raise_error
       end
     end
@@ -405,7 +415,17 @@ describe 'basics' do
 
   context 'handling the this keyword inside helper params' do
     describe '{{#hellos}}{{foo text/this/foo}}{{/hellos}}' do
-      pending 'raises an exception' do
+      let(:context) do
+        {
+          'hellos' => [
+            { 'text' => 'hello' },
+            { 'text' => 'Hello' },
+            { 'text' => 'HELLO' }
+          ]
+        }
+      end
+
+      it 'raises an exception' do
         expect { subject }.to raise_error
       end
     end
