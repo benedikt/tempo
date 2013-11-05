@@ -89,8 +89,8 @@ describe 'builtin helpers' do
 
     context 'when using @key' do
       describe '{{#each goodbyes}}{{@key}}. {{text}}! {{/each}}cruel {{world}}!' do
-        let(:context) { { 'goodbyes' => [{ '<b>#1</b>' => 'goodbye' }, { '2' => 'Goodbye' }], 'world' => 'world' } }
-        it { pending { should eq('&lt;b&gt;#1&lt;/b&gt;. goodbye! 2. GOODBYE! cruel world!') } }
+        let(:context) { { 'goodbyes' => {'<b>#1</b>' => { 'text' => 'goodbye' }, '2' => { 'text' => 'GOODBYE' } }, 'world' => 'world' } }
+        it { should eq('&lt;b&gt;#1&lt;/b&gt;. goodbye! 2. GOODBYE! cruel world!') }
       end
     end
 
