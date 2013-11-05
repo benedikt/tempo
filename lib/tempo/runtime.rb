@@ -171,7 +171,7 @@ module Tempo
 
     def visit_DataNode(node, environment)
       return '' unless local_variables = environment.local_variables
-      local_variables[node.id.to_s].to_s
+      local_variables[node.id.to_s]
     end
 
     def escape(output)

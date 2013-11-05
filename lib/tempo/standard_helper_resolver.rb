@@ -12,8 +12,10 @@ module Tempo
             yield value, { 'index' => index, 'key' => key }
           end.join
         elsif present?(collection) && collection?(collection)
-          collection.enum_for(:each).each_with_index.map do |element, index|
-            yield element, { 'index' => index }
+          enumerator = collection.enum_for(:each)
+          last_index = enumerator.count - 1
+          enumerator.each_with_index.map do |element, index|
+            yield element, { 'index' => index, 'first' => index == 0, 'last' => index == last_index }
           end.join
         else
           yield :inverse

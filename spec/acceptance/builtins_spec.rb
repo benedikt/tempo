@@ -101,7 +101,7 @@ describe 'builtin helpers' do
       end
     end
 
-    context 'when using nested  @index' do
+    context 'when using nested @index' do
       describe '{{#each goodbyes}}{{@index}}. {{text}}! {{#each ../goodbyes}}{{@index}} {{/each}}After {{@index}} {{/each}}{{@index}}cruel {{world}}!' do
         let(:context) { { 'goodbyes' => [{ 'text' => 'goodbye' }, { 'text' => 'Goodbye' }, { 'text' => 'GOODBYE' }], 'world' => 'world' } }
         it { should eq('0. goodbye! 0 1 2 After 0 1. Goodbye! 0 1 2 After 1 2. GOODBYE! 0 1 2 After 2 cruel world!') }
@@ -111,28 +111,28 @@ describe 'builtin helpers' do
     context 'when using @first' do
       describe '{{#each goodbyes}}{{#if @first}}{{text}}! {{/if}}{{/each}}cruel {{world}}!' do
         let(:context) { { 'goodbyes' => [{ 'text' => 'goodbye' }, { 'text' => 'Goodbye' }, { 'text' => 'GOODBYE' }], 'world' => 'world' } }
-        it { pending { should eq('goodbye! cruel world!') } }
+        it { should eq('goodbye! cruel world!') }
       end
     end
 
     context 'when using nested @first' do
-      describe '{{#each goodbyes}}({{#if @first}}{{text}}! {{/if}}{{#each ../goodbyes}}{{#if @first}}{{text}}!{{/if}}{{/each}}{{#if @first}} {{text}}!{{/if}}) {{/each}}cruel {{world}}!!' do
+      describe '{{#each goodbyes}}({{#if @first}}{{text}}! {{/if}}{{#each ../goodbyes}}{{#if @first}}{{text}}!{{/if}}{{/each}}{{#if @first}} {{text}}!{{/if}}) {{/each}}cruel {{world}}!' do
         let(:context) { { 'goodbyes' => [{ 'text' => 'goodbye' }, { 'text' => 'Goodbye' }, { 'text' => 'GOODBYE' }], 'world' => 'world' } }
-        it { pending { should eq('(goodbye! goodbye! goodbye!) (goodbye!) (goodbye!) cruel world!') } }
+        it { should eq('(goodbye! goodbye! goodbye!) (goodbye!) (goodbye!) cruel world!') }
       end
     end
 
     context 'when using @last' do
       describe '{{#each goodbyes}}{{#if @last}}{{text}}! {{/if}}{{/each}}cruel {{world}}!' do
         let(:context) { { 'goodbyes' => [{ 'text' => 'goodbye' }, { 'text' => 'Goodbye' }, { 'text' => 'GOODBYE' }], 'world' => 'world' } }
-        it { pending { should eq('GOODBYE! cruel world!') } }
+        it { should eq('GOODBYE! cruel world!') }
       end
     end
 
     context 'when using nested @last' do
       describe '{{#each goodbyes}}({{#if @last}}{{text}}! {{/if}}{{#each ../goodbyes}}{{#if @last}}{{text}}!{{/if}}{{/each}}{{#if @last}} {{text}}!{{/if}}) {{/each}}cruel {{world}}!' do
         let(:context) { { 'goodbyes' => [{ 'text' => 'goodbye' }, { 'text' => 'Goodbye' }, { 'text' => 'GOODBYE' }], 'world' => 'world' } }
-        it { pending { should eq('(GOODBYE!) (GOODBYE!) (GOODBYE! GOODBYE! GOODBYE!) cruel world!') } }
+        it { should eq('(GOODBYE!) (GOODBYE!) (GOODBYE! GOODBYE! GOODBYE!) cruel world!') }
       end
     end
 
