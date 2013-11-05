@@ -84,7 +84,7 @@ describe 'blocks' do
     end
 
     describe '{{#goodbyes}}{{text}} cruel {{../name}}! {{/goodbyes}}' do
-      pending { should eq('goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ') }
+      it { pending { should eq('goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ') } }
     end
   end
 
@@ -107,7 +107,7 @@ describe 'blocks' do
     end
 
     describe '{{#outer}}Goodbye {{#inner}}cruel {{../../omg}}{{/inner}}{{/outer}}' do
-      pending { should eq('Goodbye cruel OMG!') }
+      it { pending { should eq('Goodbye cruel OMG!') } }
     end
   end
 

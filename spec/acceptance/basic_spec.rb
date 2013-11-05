@@ -93,7 +93,7 @@ describe 'basics' do
       let(:context) { 0 }
 
       describe 'num: {{.}}' do
-        pending { should eq('num: 0') }
+        it { pending { should eq('num: 0') } }
       end
     end
 
@@ -170,7 +170,7 @@ describe 'basics' do
   context 'handling expressions with arguments' do
     describe '{{awesome frank}}' do
       let(:context) { { 'awesome' => lambda { |arg| arg }, 'frank' => 'Frank' } }
-      pending { should eq('Frank') }
+      it { pending { should eq('Frank') } }
     end
 
     describe '{{awesome Frank}}' do
@@ -187,14 +187,14 @@ describe 'basics' do
       end
       let(:context) { { 'awesome' => context_class.new(nil), 'frank' => 'Frank' } }
 
-      pending { should eq('Frank') }
+      it { pending { should eq('Frank') } }
     end
   end
 
   context 'handling block expressions with arguments' do
     describe '{{#awesome 1}}inner {{.}}{{/awesome}}' do
       let(:context) { { 'awesome' => lambda { |arg| yield(arg) } } }
-      pending { should eq('inner 1') }
+      it { pending { should eq('inner 1') } }
     end
 
     describe '{{#awesome 1}}inner {{.}}{{/awesome}}' do
@@ -211,14 +211,14 @@ describe 'basics' do
       end
       let(:context) { { 'awesome' => context_class.new(nil) } }
 
-      pending { should eq('inner 1') }
+      it { pending { should eq('inner 1') } }
     end
   end
 
   context 'handling block expressions' do
     describe '{{#awesome}}inner{{/awesome}}' do
       let(:context) { { 'awesome' => lambda { yield } } }
-      pending { should eq('inner') }
+      it { pending { should eq('inner') } }
     end
 
     describe '{{#awesome}}inner{{/awesome}}' do
@@ -272,17 +272,17 @@ describe 'basics' do
 
       describe '{{foo-bar}}' do
         let(:context) { context_class.new(nil) }
-        pending { should eq('baz') }
+        it { pending { should eq('baz') } }
       end
 
       describe '{{foo.foo-bar}}' do
         let(:context) { { 'foo' => context_class.new(nil) } }
-        pending { should eq('baz') }
+        it { pending { should eq('baz') } }
       end
 
       describe '{{foo/foo-bar}}' do
         let(:context) { { 'foo' => context_class.new(nil) } }
-        pending { should eq('baz') }
+        it { pending { should eq('baz') } }
       end
     end
   end
@@ -307,13 +307,13 @@ describe 'basics' do
     describe 'Goodbye {{[@alan]/expression}} world!' do
       let(:context) { { '@alan' => { 'expression' => 'beautiful' } } }
 
-      pending { should eq('Goodbye beautiful world!') }
+      it { pending { should eq('Goodbye beautiful world!') } }
     end
 
     describe 'Goodbye {{[foo bar]/expression}} world!' do
       let(:context) { { 'foo bar' => { 'expression' => 'beautiful' } } }
 
-      pending { should eq('Goodbye beautiful world!') }
+      it { pending { should eq('Goodbye beautiful world!') } }
     end
   end
 
@@ -321,7 +321,7 @@ describe 'basics' do
     describe 'Goodbye {{[foo bar]}} world!' do
       let(:context) { { 'foo bar' => 'beautiful' } }
 
-      pending { should eq('Goodbye beautiful world!') }
+      it { pending { should eq('Goodbye beautiful world!') } }
     end
   end
 
@@ -365,7 +365,7 @@ describe 'basics' do
         }
       end
 
-      pending { should eq('helloHelloHELLO') }
+      it { pending { should eq('helloHelloHELLO') } }
     end
   end
 
