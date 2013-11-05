@@ -48,7 +48,7 @@ module Tempo
       arguments = node.params.map { |p| visit(p, context) }
       options = node.hash && visit(node.hash, context) || {}
 
-      if node.path.kind_of?(Nodes::CallNode) && helper = helpers.lookup(node.path.id)
+      if helper = lookup_helper(node.path)
         helper.call(*arguments, options)
       else
         visit(node.path, context)
@@ -60,16 +60,18 @@ module Tempo
     end
 
     def visit_CallNode(node, context)
-      context = context.to_tempo_context
-      context && context.invoke(node.id)
-    end
-
-    def visit_PathNode(node, context)
       node.ids.each_with_index.inject(context) do |ctx, (segment, index)|
-        if index == 0 && helper = helpers.lookup(segment.id)
+        if segment == 'this'
+          if index == 0
+            context
+          else
+            raise "Nested this is not allowed"
+          end
+        elsif index == 0 && helper = helpers.lookup(segment)
           helper.call
         else
-          visit(segment, ctx)
+          ctx = ctx.to_tempo_context
+          ctx && ctx.invoke(segment)
         end
       end
     end
@@ -82,7 +84,7 @@ module Tempo
       arguments = node.params.map { |p| visit(p, context) }
       options = node.hash && visit(node.hash, context) || {}
 
-      conditional = if node.path.kind_of?(Nodes::CallNode) && helper = helpers.lookup(node.path.id)
+      conditional = if helper = lookup_helper(node.path)
         helper
       else
         visit(node.path, context)
@@ -160,6 +162,12 @@ module Tempo
 
     def local_variables_stack
       @local_variables ||= []
+    end
+
+    def lookup_helper(node)
+      if node.kind_of?(Nodes::CallNode) && node.ids.size == 1
+        helpers.lookup(node.ids.first)
+      end
     end
 
   end
