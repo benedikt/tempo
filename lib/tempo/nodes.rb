@@ -14,32 +14,25 @@ module Tempo
     end
 
     class IdNode < Node
-      def self.build(path_segments)
-        if path_segments.first.kind_of?(CallNode) && path_segments.first.id == 'this'
-          path_segments.shift
-        end
-
-        if path_segments.size == 1
-          path_segments.first
-        else
-          Nodes::PathNode.new(path_segments)
-        end
-      end
     end
 
     class CallNode < IdNode
-      value :id, String
+      value :ids, [String]
 
       def to_s
-        "ID(#{id})"
+        if ids.size == 1
+          "ID(#{ids.first})"
+        else
+          "PATH(#{ids.join(' ')})"
+        end
       end
     end
 
-    class PathNode < IdNode
-      child :ids, [IdNode]
+    class DataNode < IdNode
+      value :id, String
 
       def to_s
-        "PATH(#{ids.join(' ')})"
+        "DATA(#{id})"
       end
     end
 
@@ -69,14 +62,6 @@ module Tempo
 
       def to_s
         "PARTIAL(#{name} #{context_id})"
-      end
-    end
-
-    class DataNode < IdNode
-      value :id, String
-
-      def to_s
-        "DATA(#{id})"
       end
     end
 

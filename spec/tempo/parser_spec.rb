@@ -35,13 +35,13 @@ describe Tempo::Parser do
 
   context 'input is a path statement' do
     describe '{{foo/bar}}' do
-      it { expect(ast).to eq('EXPRESSION(PATH(ID(foo) ID(bar)) [] )') }
+      it { expect(ast).to eq('EXPRESSION(PATH(foo bar) [] )') }
     end
   end
 
   context 'input is a path statement with this' do
     describe '{{this/foo}}' do
-      it { expect(ast).to eq('EXPRESSION(ID(foo) [] )') }
+      it { expect(ast).to eq('EXPRESSION(PATH(this foo) [] )') }
     end
   end
 
@@ -219,11 +219,11 @@ describe Tempo::Parser do
 
   context 'input includes a block helper with a path parameter' do
     describe '{{foo bar.baz.bam}}' do
-      it { expect(ast).to eq('EXPRESSION(ID(foo) [PATH(ID(bar) ID(baz) ID(bam))] )')}
+      it { expect(ast).to eq('EXPRESSION(ID(foo) [PATH(bar baz bam)] )')}
     end
 
     describe '{{#foo bar.baz.bam}}{{/foo}}' do
-      it { expect(ast).to eq('BLOCK(ID(foo) [PATH(ID(bar) ID(baz) ID(bam))]  TEMPLATE() INVERSE())')}
+      it { expect(ast).to eq('BLOCK(ID(foo) [PATH(bar baz bam)]  TEMPLATE() INVERSE())')}
     end
   end
 

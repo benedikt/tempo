@@ -120,16 +120,12 @@ module Tempo
     end
 
     production(:path) do
-      clause('path_segments') { |path_segments| Nodes::IdNode.build(path_segments) }
+      clause('path_segments') { |path_segments| Nodes::CallNode.new(path_segments) }
     end
 
     production(:path_segments) do
-      clause('path_segments SEP id') { |path_segments, separator, id| path_segments << id }
-      clause('id') { |id| [id] }
-    end
-
-    production(:id) do
-      clause('ID') { |id| Nodes::CallNode.new(id) }
+      clause('path_segments SEP ID') { |path_segments, separator, id| path_segments << id }
+      clause('ID') { |id| [id] }
     end
 
     finalize(:lookahead => false)
