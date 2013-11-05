@@ -110,19 +110,19 @@ rempo.render('{{#fancy 1 2}}The arguments are equal{{else}}The arguments are not
 
 ### Partials
 
-It's possible to customize the way Tempo looks up the partials. By default it uses the `Tempo::PartialContext` which requires you to manually register each partial.
-Tempo provides a `Tempo::FilePartialContext` which looks up the templates in the given directory on the file system. 
+It's possible to customize the way Tempo looks up the partials. By default it uses the `Tempo::PartialResolver` which requires you to manually register each partial.
+Tempo provides a `Tempo::FilePartialResolver` which looks up the templates in the given directory on the file system. 
 
 ```ruby
 tempo = Tempo::Runtime.new do |runtime|
-  runtime.partials = Tempo::FilePartialContext.new('/path/to/templates')
+  runtime.partials = Tempo::FilePartialResolver.new('/path/to/templates')
 end
 ```
 
-To further customize this, you can provide your own PartialContext. The following example looks up the partials in the database.
+To further customize this, you can provide your own PartialResolver. The following example looks up the partials in the database.
 
 ```ruby
-class CustomPartialContext
+class CustomPartialResolver
   def lookup(partial)
     template = Template.find_by_name(partial)
     template ? template.content : "Partial #{partial} could not be found!"
@@ -130,7 +130,7 @@ class CustomPartialContext
 end
 
 tempo = Tempo::Runtime.new do |runtime|
-  runtime.partials = CustomPartialContext.new
+  runtime.partials = CustomPartialResolver.new
 end
 ```
 

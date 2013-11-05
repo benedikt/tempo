@@ -1,5 +1,5 @@
 module Tempo
-  class PartialContext
+  class PartialResolver
 
     def register(name, partial)
       partials[name.to_s] = partial

@@ -1,5 +1,5 @@
 require 'cgi'
-require 'tempo/partial_context'
+require 'tempo/partial_resolver'
 require 'tempo/standard_helper_context'
 
 module Tempo
@@ -12,7 +12,7 @@ module Tempo
     attr_writer :partials, :helpers
 
     def partials
-      @partials ||= Tempo::PartialContext.new
+      @partials ||= Tempo::PartialResolver.new
     end
 
     def helpers

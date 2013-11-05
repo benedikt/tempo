@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Tempo::PartialContext do
+describe Tempo::PartialResolver do
 
   let(:partial) { 'Example' }
 
