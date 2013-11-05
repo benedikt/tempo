@@ -224,7 +224,7 @@ describe Tempo::Runtime do
     end
 
     describe '{{this.foo}}' do
-      it { pending { expect(output).to eq('context') } }
+      it { expect(output).to eq('context') }
     end
   end
 
