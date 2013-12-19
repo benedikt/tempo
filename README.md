@@ -4,7 +4,7 @@ Tempo is a simple templating system based on the Handlebars syntax. It provides 
 
 ## Requirements
 
-* [Ruby Language Toolkit (RLTK)](http://https://github.com/chriswailes/RLTK) (~> 2.2)
+* [Ruby Language Toolkit (RLTK)](https://github.com/chriswailes/RLTK) (~> 2.2)
 
 ## Installation
 
