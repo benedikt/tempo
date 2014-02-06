@@ -56,7 +56,7 @@ module Tempo
   end
 
   class EnumerableContext < Context
-    allows :first, :last, :count, :size, :length
+    allows :first, :last, :count, :size, :length, :reverse
   end
 
   class StringContext < Context
