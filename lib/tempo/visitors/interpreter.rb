@@ -89,30 +89,22 @@ module Tempo
           conditional.call(*arguments, options) do |variant, local_context, local_variables|
             variant, local_context, local_variables, = :template, variant, local_context unless variant.kind_of?(Symbol)
 
-            environment.push_variables(local_variables)
-            environment.push_context(local_context) if local_context
-            result = visit(node.send(variant))
-            environment.pop_context if local_context
-            environment.pop_variables
-            result
+            environment.with(:context => local_context, :variables => local_variables) do
+              visit(node.send(variant))
+            end
           end.to_s
         elsif !conditional.kind_of?(HashContext) && conditional.respond_to?(:each) && conditional.enum_for(:each).count > 0
           conditional.enum_for(:each).each_with_index.inject('') do |output, (child, index)|
-            environment.push_variables({ 'index' => index })
-            environment.push_context(child)
-            output << visit(node.template)
-            environment.pop_context
-            environment.pop_variables
-            output
+            environment.with(:context => child, :variables => { 'index' => index }) do
+              output << visit(node.template)
+            end
           end
         elsif conditional && !(conditional.respond_to?(:empty?) && conditional.empty?)
-          environment.push_context(conditional)
-          result = visit(node.template)
-          environment.pop_context
-          result
+          environment.with(:context => conditional) do
+            visit(node.template)
+          end
         else
-          result = visit(node.inverse)
-          result
+          visit(node.inverse)
         end
       end
 
@@ -133,13 +125,12 @@ module Tempo
       end
 
       def visit_PartialNode(node)
-        partial = runtime.partials.lookup(node.name)
+        if partial = runtime.partials.lookup(node.name)
+          context = node.context_id && visit(node.context_id)
 
-        if partial
-          environment.push_context(visit(node.context_id)) if node.context_id
-          result = visit(partial)
-          environment.pop_context if node.context_id
-          result
+          environment.with(:context => context) do
+            visit(partial)
+          end
         else
           "Missing partial '#{node.name}'"
         end

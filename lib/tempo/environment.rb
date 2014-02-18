@@ -37,6 +37,16 @@ module Tempo
       variables_stack.pop
     end
 
+    def with(arguments)
+      variables, context = arguments[:variables], arguments[:context]
+      push_variables(variables) if variables
+      push_context(context) if context
+      yield
+    ensure
+      pop_variables if variables
+      pop_context if context
+    end
+
   protected
 
     def context_stack
