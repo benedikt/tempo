@@ -43,33 +43,31 @@ module Tempo
       end
 
       def visit_CallNode(node)
-        @environment, old_environment = environment.clone, environment
+        environment.isolated do
+          parent_allowed = true
+          node.ids.each_with_index.inject(environment.local_context) do |ctx, (segment, index)|
+            if segment == 'this' || segment == '.'
+              parent_allowed = false
 
-        parent_allowed = true
-        node.ids.each_with_index.inject(environment.local_context) do |ctx, (segment, index)|
-          if segment == 'this' || segment == '.'
-            parent_allowed = false
-
-            if index == 0
-              ctx.to_tempo_context
+              if index == 0
+                ctx.to_tempo_context
+              else
+                raise "Nested this is not allowed"
+              end
+            elsif segment == '..'
+              raise "Nested parent call is not allowed" unless parent_allowed
+              environment.pop_context
+              environment.local_context.to_tempo_context
+            elsif index == 0 && helper = lookup_helper(segment)
+              parent_allowed = false
+              call_helper(helper)
             else
-              raise "Nested this is not allowed"
+              parent_allowed = false
+              ctx = ctx.to_tempo_context
+              ctx && ctx.invoke(segment)
             end
-          elsif segment == '..'
-            raise "Nested parent call is not allowed" unless parent_allowed
-            environment.pop_context
-            environment.local_context.to_tempo_context
-          elsif index == 0 && helper = lookup_helper(segment)
-            parent_allowed = false
-            call_helper(helper)
-          else
-            parent_allowed = false
-            ctx = ctx.to_tempo_context
-            ctx && ctx.invoke(segment)
           end
         end
-      ensure
-        @environment = old_environment
       end
 
       def visit_CommentNode(node)

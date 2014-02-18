@@ -8,11 +8,6 @@ module Tempo
       push_context(attributes[:context]) if attributes[:context]
     end
 
-    def initialize_clone(original)
-      @context_stack = original.context_stack.clone
-      @variables_stack = original.variables_stack.clone
-    end
-
     def local_context
       context_stack.last
     end
@@ -45,6 +40,17 @@ module Tempo
     ensure
       pop_variables if variables
       pop_context if context
+    end
+
+    def isolated
+      @options, original_options = options.clone, options
+      @context_stack, original_context_stack = context_stack.clone, context_stack
+      @variables_stack, original_variables_stack = variables_stack.clone, variables_stack
+      yield
+    ensure
+      @options = original_options
+      @context_stack = original_context_stack
+      @variables_stack = original_variables_stack
     end
 
   protected
