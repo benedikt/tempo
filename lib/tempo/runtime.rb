@@ -1,4 +1,5 @@
 require 'cgi'
+require 'tempo/environment'
 require 'tempo/partial_resolver'
 require 'tempo/standard_helper_resolver'
 require 'tempo/visitors/interpreter'
@@ -8,11 +9,6 @@ module Tempo
 
     def initialize
       yield self if block_given?
-    end
-
-    def initialize_clone(original)
-      @context_stack = original.context_stack.clone
-      @variables_stack = original.variables_stack.clone
     end
 
     attr_writer :partials, :helpers
@@ -26,7 +22,12 @@ module Tempo
     end
 
     def render(template, context, options = {})
-      push_context(context)
+      environment = Environment.new({
+        :context => context,
+        :options => options
+      })
+
+      visitor = Tempo::Visitors::Interpreter.new(self, environment)
       visitor.visit(template)
     end
 
@@ -47,42 +48,5 @@ module Tempo
       end
     end
 
-    def local_context
-      context_stack.last
-    end
-
-    def push_context(context)
-      context_stack.push(context)
-    end
-
-    def pop_context
-      context_stack.pop
-    end
-
-    def local_variables
-      variables_stack.last
-    end
-
-    def push_variables(variables)
-      variables_stack.push(variables)
-    end
-
-    def pop_variables
-      variables_stack.pop
-    end
-
-  protected
-
-    def visitor
-      Tempo::Visitors::Interpreter.new(self)
-    end
-
-    def context_stack
-      @context_stack ||= []
-    end
-
-    def variables_stack
-      @variables_stack ||= []
-    end
   end
 end

@@ -4,10 +4,11 @@ module Tempo
   module Visitors
     class Interpreter < Base
 
-      attr_reader :runtime
+      attr_reader :runtime, :environment
 
-      def initialize(runtime)
+      def initialize(runtime, environment)
         @runtime = runtime
+        @environment = environment
       end
 
       def visit_String(node)
@@ -41,10 +42,10 @@ module Tempo
       end
 
       def visit_CallNode(node)
-        @runtime, old_runtime = runtime.clone, runtime
+        @environment, old_environment = environment.clone, environment
 
         parent_allowed = true
-        node.ids.each_with_index.inject(runtime.local_context) do |ctx, (segment, index)|
+        node.ids.each_with_index.inject(environment.local_context) do |ctx, (segment, index)|
           if segment == 'this' || segment == '.'
             parent_allowed = false
 
@@ -55,8 +56,8 @@ module Tempo
             end
           elsif segment == '..'
             raise "Nested parent call is not allowed" unless parent_allowed
-            runtime.pop_context
-            runtime.local_context.to_tempo_context
+            environment.pop_context
+            environment.local_context.to_tempo_context
           elsif index == 0 && helper = runtime.lookup_helper(segment)
             parent_allowed = false
             helper.call
@@ -67,7 +68,7 @@ module Tempo
           end
         end
       ensure
-        @runtime = old_runtime
+        @environment = old_environment
       end
 
       def visit_CommentNode(node)
@@ -88,26 +89,26 @@ module Tempo
           conditional.call(*arguments, options) do |variant, local_context, local_variables|
             variant, local_context, local_variables, = :template, variant, local_context unless variant.kind_of?(Symbol)
 
-            runtime.push_variables(local_variables)
-            runtime.push_context(local_context) if local_context
+            environment.push_variables(local_variables)
+            environment.push_context(local_context) if local_context
             result = visit(node.send(variant))
-            runtime.pop_context if local_context
-            runtime.pop_variables
+            environment.pop_context if local_context
+            environment.pop_variables
             result
           end.to_s
         elsif !conditional.kind_of?(HashContext) && conditional.respond_to?(:each) && conditional.enum_for(:each).count > 0
           conditional.enum_for(:each).each_with_index.inject('') do |output, (child, index)|
-            runtime.push_variables({ 'index' => index })
-            runtime.push_context(child)
+            environment.push_variables({ 'index' => index })
+            environment.push_context(child)
             output << visit(node.template)
-            runtime.pop_context
-            runtime.pop_variables
+            environment.pop_context
+            environment.pop_variables
             output
           end
         elsif conditional && !(conditional.respond_to?(:empty?) && conditional.empty?)
-          runtime.push_context(conditional)
+          environment.push_context(conditional)
           result = visit(node.template)
-          runtime.pop_context
+          environment.pop_context
           result
         else
           result = visit(node.inverse)
@@ -135,9 +136,9 @@ module Tempo
         partial = runtime.partials.lookup(node.name)
 
         if partial
-          runtime.push_context(visit(node.context_id)) if node.context_id
+          environment.push_context(visit(node.context_id)) if node.context_id
           result = visit(partial)
-          runtime.pop_context if node.context_id
+          environment.pop_context if node.context_id
           result
         else
           "Missing partial '#{node.name}'"
@@ -151,7 +152,7 @@ module Tempo
       end
 
       def visit_DataNode(node)
-        return '' unless local_variables = runtime.local_variables
+        return '' unless local_variables = environment.local_variables
         local_variables[node.id.to_s]
       end
 
