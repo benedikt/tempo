@@ -31,22 +31,5 @@ module Tempo
       visitor.visit(template)
     end
 
-    def escape(output)
-      return output if output.kind_of?(Tempo::SafeString)
-
-      CGI.escapeHTML(output).gsub(/(['`])/, {
-        "'" => '&#39;',
-        '`' => '&#x60;'
-      })
-    end
-
-    def lookup_helper(node)
-      if node.kind_of?(Nodes::CallNode) && node.ids.size == 1
-        helpers.lookup(node.ids.first)
-      else
-        helpers.lookup(node)
-      end
-    end
-
   end
 end

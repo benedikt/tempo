@@ -1,3 +1,4 @@
+require 'cgi'
 require 'tempo/visitors/base'
 
 module Tempo
@@ -30,7 +31,7 @@ module Tempo
         arguments = node.params.map { |p| visit(p) }
         options = node.hash && visit(node.hash) || {}
 
-        if helper = runtime.lookup_helper(node.path)
+        if helper = lookup_helper(node.path)
           helper.call(*arguments, options)
         else
           visit(node.path)
@@ -38,7 +39,7 @@ module Tempo
       end
 
       def visit_ExpressionNode(node)
-        runtime.escape(visit_UnescapedExpressionNode(node))
+        escape(visit_UnescapedExpressionNode(node))
       end
 
       def visit_CallNode(node)
@@ -58,7 +59,7 @@ module Tempo
             raise "Nested parent call is not allowed" unless parent_allowed
             environment.pop_context
             environment.local_context.to_tempo_context
-          elsif index == 0 && helper = runtime.lookup_helper(segment)
+          elsif index == 0 && helper = lookup_helper(segment)
             parent_allowed = false
             helper.call
           else
@@ -79,7 +80,7 @@ module Tempo
         arguments = node.params.map { |p| visit(p) }
         options = node.hash && visit(node.hash) || {}
 
-        conditional = if helper = runtime.lookup_helper(node.path)
+        conditional = if helper = lookup_helper(node.path)
           helper
         else
           visit(node.path)
@@ -145,6 +146,25 @@ module Tempo
       def visit_DataNode(node)
         return '' unless local_variables = environment.local_variables
         local_variables[node.id.to_s]
+      end
+
+    private
+
+      def escape(output)
+        return output if output.kind_of?(Tempo::SafeString)
+
+        CGI.escapeHTML(output).gsub(/(['`])/, {
+          "'" => '&#39;',
+          '`' => '&#x60;'
+        })
+      end
+
+      def lookup_helper(node)
+        if node.kind_of?(Nodes::CallNode) && node.ids.size == 1
+          runtime.helpers.lookup(node.ids.first)
+        else
+          runtime.helpers.lookup(node)
+        end
       end
 
     end
