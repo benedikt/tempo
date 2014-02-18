@@ -32,7 +32,7 @@ module Tempo
         options = node.hash && visit(node.hash) || {}
 
         if helper = lookup_helper(node.path)
-          helper.call(*arguments, options)
+          call_helper(helper, arguments, options)
         else
           visit(node.path)
         end.to_s
@@ -61,7 +61,7 @@ module Tempo
             environment.local_context.to_tempo_context
           elsif index == 0 && helper = lookup_helper(segment)
             parent_allowed = false
-            helper.call
+            call_helper(helper)
           else
             parent_allowed = false
             ctx = ctx.to_tempo_context
@@ -87,7 +87,7 @@ module Tempo
         end
 
         if conditional.respond_to?(:call)
-          conditional.call(*arguments, options) do |variant, local_context, local_variables|
+          call_helper(conditional, arguments, options) do |variant, local_context, local_variables|
             variant, local_context, local_variables, = :template, variant, local_context unless variant.kind_of?(Symbol)
 
             environment.with(:context => local_context, :variables => local_variables) do
@@ -167,6 +167,14 @@ module Tempo
         end
       end
 
+      def call_helper(helper, arguments = [], options = {}, &block)
+        options = options.merge({
+          :_runtime => runtime,
+          :_environment => environment
+        })
+
+        helper.call(*arguments, options, &block)
+      end
     end
   end
 end
