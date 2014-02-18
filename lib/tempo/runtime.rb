@@ -1,4 +1,3 @@
-require 'cgi'
 require 'tempo/environment'
 require 'tempo/partial_resolver'
 require 'tempo/standard_helper_resolver'
