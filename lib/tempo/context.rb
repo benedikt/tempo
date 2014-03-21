@@ -38,6 +38,10 @@ module Tempo
       ''
     end
 
+    def eql?(other)
+      hash == other.hash
+    end
+
     def inspect
       "#<#{self.class} for #{__getobj__.inspect}>"
     end
