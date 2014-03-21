@@ -50,7 +50,17 @@ describe Tempo::Context do
 
   describe '#inspect' do
     it 'should make clear that the resource is wrapped with a context' do
-      expect(subject.inspect).to eq("#<#{context} @resource=#{resource.inspect}>")
+      expect(subject.inspect).to eq("#<#{context} for #{resource.inspect}>")
+    end
+  end
+
+  describe '#eql?' do
+    it 'should be true for contexts wrapping the same resource' do
+      expect(context.new(resource)).to eql(subject)
+    end
+
+    it 'should be false for context wrapping different resources' do
+      expect(context.new("example")).not_to eql(subject)
     end
   end
 
