@@ -39,7 +39,7 @@ module Tempo
     end
 
     def inspect
-      "#<#{self.class} @resource=#{__getobj__.inspect}>"
+      "#<#{self.class} for #{__getobj__.inspect}>"
     end
   end
 
