@@ -55,7 +55,7 @@ describe 'builtin helpers' do
       let(:context) { { 'goodbye' => 0, 'world' => 'world' } }
 
       context 'when includeZero is not defined' do
-        it { pending { should eq('cruel world!') } }
+        pending { should eq('cruel world!') }
       end
 
       context 'when includeZero is true' do
@@ -147,7 +147,7 @@ describe 'builtin helpers' do
     describe '{{log "This is a message!"}}' do
       it 'should print the given message to STDOUT' do
         io = double
-        io.should_receive(:puts).with('This is a message!')
+        allow(io).to receive(:puts).with('This is a message!')
         runtime.helpers.register(:log, Tempo::StandardHelperResolver::Log.new(io))
         expect(subject).to eq('')
       end

@@ -9,7 +9,7 @@ describe Tempo do
 
     before do
       Tempo.runtime = nil
-      Tempo::Runtime.stub(:new => runtime)
+      allow(Tempo::Runtime).to receive_messages(:new => runtime)
     end
 
     it 'should create a new runtime' do

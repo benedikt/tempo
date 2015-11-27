@@ -456,7 +456,7 @@ describe Tempo::Runtime do
     describe '{{log "This is a message!"}}' do
       it 'should print the given message to STDOUT' do
         io = double
-        io.should_receive(:puts).with('This is a message!')
+        allow(io).to receive(:puts).with('This is a message!')
         subject.helpers.register(:log, Tempo::StandardHelperResolver::Log.new(io))
         expect(output).to eq('')
       end

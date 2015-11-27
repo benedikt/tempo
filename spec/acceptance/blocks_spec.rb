@@ -102,7 +102,7 @@ describe 'blocks' do
       end
 
       it 'raises an exception' do
-        expect { subject }.to raise_error
+        expect { subject }.to raise_error "Nested parent call is not allowed"
       end
     end
   end

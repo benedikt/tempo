@@ -428,11 +428,11 @@ describe Tempo::Lexer do
 
   context 'input with broken statements' do
     describe '{{foo}' do
-      it { expect { types }.to raise_error }
+      it { expect { types }.to raise_error RLTK::LexingError }
     end
 
     describe '{{foo & }}' do
-      it { expect { types }.to raise_error }
+      it { expect { types }.to raise_error RLTK::LexingError }
     end
   end
 end

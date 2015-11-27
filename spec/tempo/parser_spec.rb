@@ -229,19 +229,19 @@ describe Tempo::Parser do
 
   context 'input with invalid language' do
     describe 'foo{{^}}bar' do
-      it { expect { ast }.to raise_error }
+      it { expect { ast }.to raise_error RLTK::NotInLanguage }
     end
 
     describe '{{foo}' do
-      it { expect { ast }.to raise_error }
+      it { expect { ast }.to raise_error RLTK::LexingError }
     end
 
     describe '{{foo &}' do
-      it { expect { ast }.to raise_error }
+      it { expect { ast }.to raise_error RLTK::LexingError }
     end
 
     describe '{{#goodbyes}}{{/hellos}}' do
-      it { expect { ast }.to raise_error }
+      it { expect { ast }.to raise_error // }
     end
   end
 end
