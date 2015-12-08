@@ -128,6 +128,6 @@ module Tempo
       clause('ID') { |id| [id] }
     end
 
-    finalize(:lookahead => false)
+    finalize(:lookahead => false, :use => File.expand_path('../parser.rltk', __FILE__))
   end
 end
