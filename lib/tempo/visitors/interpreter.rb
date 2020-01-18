@@ -156,7 +156,7 @@ module Tempo
       def escape(output)
         return output if output.kind_of?(Tempo::SafeString)
 
-        CGI.escapeHTML(output).gsub(/(['`])/, ESCAPE_MAPPING)
+        CGI.escapeHTML(output.to_s).gsub(/(['`])/, ESCAPE_MAPPING)
       end
 
       def lookup_helper(node)
